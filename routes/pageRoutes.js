@@ -5,12 +5,12 @@ const router = express.Router();
 
 // Data
 const events = [
-  { title: "Pac-man's Prejudice", date: '2025-05-25', location: 'Online', image: '/images/HighScoreEvent.png' },
-  { title: 'LAN Legends', date: '2025-06-05', location: 'Smart City', image: '/images/LanEvent.png' },
-  { title: 'Cosplay & Cartridges', date: '2025-06-17', location: 'Belgium Campus', image: '/images/Cos&Cart.png' },
-  { title: 'Just Dance Retro Remix', date: '2025-07-02', location: 'Virtual Dance Arena', image: '/images/RetroRemix.png' },
-  { title: "Cartridge Collector's Fest", date: '2025-07-15', location: 'Johannesburg', image: '/images/raw.png' },
-  { title: 'Throwback Thrusday', date: '2025-08-01', location: 'Pixel Bar', image: '/images/Arcade.png' }
+  { title: "Pac-man's Prejudice", date: '2025 / 05 / 25', location: 'Online', image: '/images/HighScoreEvent.png' },
+  { title: 'LAN Legends', date: '2025 / 06 / 05', location: 'Smart City', image: '/images/LanEvent.png' },
+  { title: 'Cosplay & Cartridges', date: '2025 / 06 / 17', location: 'Belgium Campus, Preotia Campus', image: '/images/Cos&Cart.png' },
+  { title: 'Just Dance Retro Remix', date: '2025 / 07 / 02', location: 'Smart City', image: '/images/RetroRemix.png' },
+  { title: "Cartridge Collector's Fest", date: '2025 / 07 / 15', location: 'Sports Field', image: '/images/raw.png' },
+  { title: 'Throwback Thrusday', date: '2025 / 08 / 01', location: 'All Belgium Campuses', image: '/images/Arcade.png' }
 ];
 
 const team = [
