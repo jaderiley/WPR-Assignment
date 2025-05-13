@@ -10,7 +10,7 @@
       <span class="game-title">NEXT EVENT</span>
     </div>
     <div class="game-content">
-      <div class="countdown" id="countdown">
+      <div class="countdown">
         <h3 class="event-title"><%= nextEvent.title %></h3>
         <div class="countdown-timer">
           <span id="timer"></span>
@@ -61,13 +61,13 @@
 </div>
 
 <% if (nextEvent) { %>
-  <div id="countdown" data-event-date="<%= nextEvent.date %>"></div>
+  <div id="countdown-data" data-event-date="<%= nextEvent.date %>" style="display:none;"></div>
 <% } %>
 
 <script>
-  const countdownElement = document.getElementById('countdown');
-  if (countdownElement) {
-    const eventDate = new Date(countdownElement.dataset.eventDate).getTime();
+  const countdownData = document.getElementById('countdown-data');
+  if (countdownData) {
+    const eventDate = new Date(countdownData.dataset.eventDate).getTime();
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = eventDate - now;

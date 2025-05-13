@@ -8,6 +8,13 @@
     <div class="thank-you">
       <h1>LEVEL CLEARED!</h1>
       <p class="success-message">Your message has been successfully transmitted!</p>
+      <% if (submission) { %>
+        <div class="user-details">
+          <p><strong>Name:</strong> <%= submission.name %></p>
+          <p><strong>Email:</strong> <%= submission.email %></p>
+          <p><strong>Message:</strong> <%= submission.message %></p>
+        </div>
+      <% } %>
       <p class="quote">"<%= quote %>"</p>
       <a href="/" class="game-button">RETURN TO HOME</a>
     </div>
