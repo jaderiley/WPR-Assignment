@@ -5,19 +5,19 @@ const router = express.Router();
 
 // Data
 const events = [
-  { title: 'High Score Showdown', date: '2025-05-25', location: 'Online', image: '/images/HighScoreEvent.png' },
-  { title: 'LAN Legends', date: '2025-06-05', location: 'Pixelverse HQ', image: '/images/LanEvent.png' },
-  { title: 'Cosplay & Cartridges', date: '2025-06-17', location: 'RetroCon', image: '/images/Cos&Cart.png' },
-  { title: 'Retro Remix', date: '2025-07-02', location: 'Virtual Dance Arena', image: '/images/RetroRemix.png' },
+  { title: "Pac-man's Prejudice", date: '2025-05-25', location: 'Online', image: '/images/HighScoreEvent.png' },
+  { title: 'LAN Legends', date: '2025-06-05', location: 'Smart City', image: '/images/LanEvent.png' },
+  { title: 'Cosplay & Cartridges', date: '2025-06-17', location: 'Belgium Campus', image: '/images/Cos&Cart.png' },
+  { title: 'Just Dance Retro Remix', date: '2025-07-02', location: 'Virtual Dance Arena', image: '/images/RetroRemix.png' },
   { title: "Cartridge Collector's Fest", date: '2025-07-15', location: 'Johannesburg', image: '/images/raw.png' },
-  { title: 'Arcade Night Throwback', date: '2025-08-01', location: 'Pixel Bar', image: '/images/Arcade.png' }
+  { title: 'Throwback Thrusday', date: '2025-08-01', location: 'Pixel Bar', image: '/images/Arcade.png' }
 ];
 
 const team = [
-  { name: 'Erick', role: 'Team Lead', game: 'Donkey Kong', icon: '/images/icons/Pacman.png' },
-  { name: 'Zane', role: 'Frontend Dev', game: 'Pac-Man', icon: '/images/icons/Ghost1.png' },
-  { name: 'Mel', role: 'Backend Dev', game: 'Galaga', icon: '/images/icons/Ghost2.png' },
-  { name: 'Tumi', role: 'Data Manager', game: 'Tetris', icon: '/images/icons/Ghost3.png' }
+  { name: 'Jason Maracha Bond', role: 'Team Lead', game: 'Donkey Kong', icon: '/images/icons/Pacman.png' },
+  { name: 'Erik Knoetze', role: 'Frontend Dev', game: 'Pac-Man', icon: '/images/icons/Ghost1.png' },
+  { name: 'Jade Riley', role: 'Backend Dev', game: 'Galaga', icon: '/images/icons/Ghost2.png' },
+  { name: 'Shiva Ganesh', role: 'Data Manager', game: 'Snake', icon: '/images/icons/Ghost3.png' }
 ];
 
 const gameQuotes = [
