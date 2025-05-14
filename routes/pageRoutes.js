@@ -5,12 +5,12 @@ const router = express.Router();
 
 // Data
 const events = [
-  { title: "Pac-man's Prejudice", date: '2025-05-25', location: 'Online', image: '/images/HighScoreEvent.png' },
-  { title: 'LAN Legends', date: '2025-06-05', location: 'Smart City', image: '/images/LanEvent.png' },
-  { title: 'Cosplay & Cartridges', date: '2025-06-17', location: 'Belgium Campus, Preotia', image: '/images/Cos&Cart.png' },
-  { title: 'Just Dance Retro Remix', date: '2025-07-02', location: 'Smart City', image: '/images/RetroRemix.png' },
-  { title: "Cartridge Collector's Fest", date: '2025-07-15', location: 'Sports Field', image: '/images/raw.png' },
-  { title: 'Throwback Thrusday', date: '2025-08-01', location: 'All Belgium Campuses', image: '/images/Arcade.png' }
+  { title: "Pac-man's Prejudice", date: '2025-05-25', location: 'Online', image: '/images/HighScoreEvent.png', description: 'Join us for a high-score challenge!' },
+  { title: 'LAN Legends', date: '2025-06-05', location: 'Smart City', image: '/images/LanEvent.png', description: 'LAN party extravaganza!' },
+  { title: 'Cosplay & Cartridges', date: '2025-06-17', location: 'Belgium Campus, Pretoria', image: '/images/Cos&Cart.png', description: 'Cosplay and retro gaming fun!' },
+  { title: 'Just Dance Retro Remix', date: '2025-07-02', location: 'Smart City', image: '/images/RetroRemix.png', description: 'Dance to retro beats!' },
+  { title: "Cartridge Collector's Fest", date: '2025-07-15', location: 'Sports Field', image: '/images/raw.png', description: 'Celebrate cartridge collecting!' },
+  { title: 'Throwback Thursday', date: '2025-08-01', location: 'All Belgium Campuses', image: '/images/Arcade.png', description: 'Relive arcade classics!' }
 ];
 
 const team = [
@@ -34,7 +34,6 @@ const contactSubmissions = [];
 
 // Home page
 router.get('/', (req, res) => {
-  // Get next 3 upcoming events
   const now = new Date();
   const upcomingEvents = events
     .filter(event => new Date(event.date) > now)
@@ -55,6 +54,17 @@ router.get('/about', (req, res) => {
 // Events page
 router.get('/events', (req, res) => {
   res.render('pages/events', { events });
+});
+
+// Individual event page
+router.get('/event/:title', (req, res) => {
+  const event = events.find(e => e.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-') === req.params.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-'));
+  if (event) {
+    console.log('Rendering event:', event);
+    res.render('pages/event', { event });
+  } else {
+    res.status(404).send('Event not found');
+  }
 });
 
 // Contact page
