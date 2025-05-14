@@ -1,199 +1,74 @@
 <%- include('../partials/header') %>
 
-<div class="container">
-    <h1 class="mb-4">Community Events</h1>
-    <p class="lead mb-5">Join us at our upcoming community events and activities.</p>
+<h1>Upcoming Events</h1>
 
-    <!-- Search Form -->
-    <div class="row mb-5">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    <form id="searchForm" action="/events" method="GET" class="row g-3">
-                        <div class="col-md-5 position-relative">
-                            <div class="input-group">
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="searchInput" 
-                                       name="search" 
-                                       placeholder="Search events..." 
-                                       value="<%= locals.search || '' %>"
-                                       autocomplete="off">
-                                <button class="btn btn-outline-secondary dropdown-toggle" 
-                                        type="button" 
-                                        id="searchTypeToggle" 
-                                        data-bs-toggle="dropdown" 
-                                        aria-expanded="false">
-                                    <span id="searchTypeText">Event Name</span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="searchTypeToggle">
-                                    <li><a class="dropdown-item search-type-option" href="#" data-type="name">Event Name</a></li>
-                                    <li><a class="dropdown-item search-type-option" href="#" data-type="location">Location</a></li>
-                                </ul>
-                            </div>
-                            <div id="searchSuggestions" class="search-suggestions"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <select class="form-select" name="filter" id="filterSelect">
-                                <option value="">All Events</option>
-                                <option value="upcoming" <%= locals.filter === 'upcoming' ? 'selected' : '' %>>Upcoming Events</option>
-                                <option value="past" <%= locals.filter === 'past' ? 'selected' : '' %>>Past Events</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary w-100">Search</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="game-container events-container">
+  <div class="game-header">
+    <span class="game-title">EVENT SEARCH</span>
+  </div>
+  <div class="game-content">
+    <div class="search-controls">
+      <div class="search-box">
+        <input type="text" id="eventSearch" placeholder="Search events..." class="game-input">
+      </div>
+      <div class="filter-toggle">
+        <label class="switch-label">Name</label>
+        <label class="game-switch">
+          <input type="checkbox" id="toggleLocation">
+          <span class="switch-slider"></span>
+        </label>
+        <label class="switch-label">Location</label>
+      </div>
     </div>
-
-    <!-- Search Results Message -->
-    <div id="searchResultsMessage" class="alert alert-info mb-4" style="display: none;"></div>
-
-    <!-- Events List -->
-    <div id="eventsList" class="row">
-        <% if (events.length > 0) { %>
-            <% events.forEach(event => { %>
-                <div class="col-md-6 col-lg-4 mb-4 event-card" data-event-date="<%= event.date %>">
-                    <div class="card h-100">
-                        <img src="<%= event.image %>" class="card-img-top" alt="<%= event.title %>">
-                        <div class="card-body">
-                            <h5 class="card-title"><%= event.title %></h5>
-                            <p class="card-text">
-                                <strong>Date:</strong> <%= new Date(event.date).toLocaleDateString() %><br>
-                                <strong>Location:</strong> <%= event.location %>
-                            </p>
-                            <p class="card-text"><%= event.description %></p>
-                        </div>
-                        <div class="card-footer bg-transparent">
-                            <small class="text-muted">Don't miss out on this exciting event!</small>
-                        </div>
-                    </div>
-                </div>
-            <% }); %>
-        <% } else { %>
-            <div class="col-12">
-                <div class="alert alert-warning">
-                    No events found matching your search criteria.
-                </div>
-            </div>
-        <% } %>
+    <div class="event-grid" id="eventGrid">
+      <% events.forEach(event => { %>
+        <a href="/event/<%= event.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-') %>" class="event-card"
+           data-name="<%= event.title.toLowerCase() %>"
+           data-location="<%= event.location.toLowerCase() %>"
+           style="background-image: url('<%= event.image %>');
+                  background-size: cover;
+                  background-position: center;
+                  background-repeat: no-repeat;
+                  display: block;
+                  text-decoration: none;">
+          <div class="content">
+            <h3 class="event-title"><%= event.title %></h3>
+            <p class="event-date"><%= event.date %></p>
+            <p class="event-location"><%= event.location %></p>
+            <p class="event-description"><%= event.description %></p>
+          </div>
+        </a>
+      <% }); %>
     </div>
+  </div>
 </div>
 
-<!-- Add JavaScript for real-time search -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const searchSuggestions = document.getElementById('searchSuggestions');
-    const eventsList = document.getElementById('eventsList');
-    const searchResultsMessage = document.getElementById('searchResultsMessage');
-    const filterSelect = document.getElementById('filterSelect');
-    const searchTypeText = document.getElementById('searchTypeText');
-    const searchTypeOptions = document.querySelectorAll('.search-type-option');
-    let searchTimeout;
-    let currentSearchType = 'name';
+  const searchInput = document.getElementById('eventSearch');
+  const eventGrid = document.getElementById('eventGrid');
+  const toggleSwitch = document.getElementById('toggleLocation');
+  let searchByLocation = false;
 
-    // Set up search type toggle
-    searchTypeOptions.forEach(option => {
-        option.addEventListener('click', function(e) {
-            e.preventDefault();
-            currentSearchType = this.dataset.type;
-            searchTypeText.textContent = this.textContent;
-            searchInput.placeholder = `Search by ${currentSearchType === 'name' ? 'event name' : 'location'}...`;
-            updateSearchResults(searchInput.value, filterSelect.value);
-        });
+  function filterEvents() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const eventCards = eventGrid.getElementsByClassName('event-card');
+
+    Array.from(eventCards).forEach(card => {
+      const searchAttribute = searchByLocation ? 'data-location' : 'data-name';
+      const cardValue = card.getAttribute(searchAttribute);
+      const isVisible = cardValue.includes(searchTerm);
+      card.style.display = isVisible ? 'block' : 'none';
     });
+  }
 
-    // Function to update search results
-    function updateSearchResults(searchTerm, filter) {
-        const eventCards = document.querySelectorAll('.event-card');
-        let visibleCount = 0;
-        const today = new Date();
-        today.setHours(0,0,0,0); // Only compare date part
+  searchInput.addEventListener('input', filterEvents);
 
-        eventCards.forEach(card => {
-            const title = card.querySelector('.card-title').textContent.toLowerCase();
-            const location = card.querySelector('.card-text').textContent.split('Location:')[1].split('Date:')[0].trim().toLowerCase();
-            const eventDateStr = card.getAttribute('data-event-date');
-            const eventDate = new Date(eventDateStr);
-            eventDate.setHours(0,0,0,0);
-
-            let matchesSearch = false;
-            if (searchTerm) {
-                if (currentSearchType === 'name') {
-                    matchesSearch = title.includes(searchTerm.toLowerCase());
-                } else {
-                    matchesSearch = location.includes(searchTerm.toLowerCase());
-                }
-            } else {
-                matchesSearch = true;
-            }
-
-            let matchesFilter = true;
-            if (filter === 'upcoming') {
-                matchesFilter = eventDate >= today;
-            } else if (filter === 'past') {
-                matchesFilter = eventDate < today;
-            }
-
-            if (matchesSearch && matchesFilter) {
-                card.style.display = '';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        // Update search results message
-        if (searchTerm || filter) {
-            let message = '';
-            if (searchTerm && filter) {
-                message = `Showing ${visibleCount} results for "${searchTerm}" in ${filter === 'upcoming' ? 'upcoming' : 'past'} events`;
-            } else if (searchTerm) {
-                message = `Showing ${visibleCount} results for "${searchTerm}" in ${currentSearchType === 'name' ? 'event names' : 'locations'}`;
-            } else if (filter) {
-                message = `Showing ${visibleCount} ${filter === 'upcoming' ? 'upcoming' : 'past'} events`;
-            }
-            searchResultsMessage.textContent = message;
-            searchResultsMessage.style.display = 'block';
-        } else {
-            searchResultsMessage.style.display = 'none';
-        }
-
-        // Show no results message if needed
-        const noResultsMessage = document.querySelector('.alert-warning');
-        if (visibleCount === 0) {
-            if (!noResultsMessage) {
-                const message = document.createElement('div');
-                message.className = 'col-12';
-                message.innerHTML = '<div class="alert alert-warning">No events found matching your search criteria.</div>';
-                eventsList.appendChild(message);
-            }
-        } else if (noResultsMessage) {
-            noResultsMessage.parentElement.remove();
-        }
-    }
-
-    // Event listener for search input
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const searchTerm = this.value;
-        
-        searchTimeout = setTimeout(() => {
-            updateSearchResults(searchTerm, filterSelect.value);
-        }, 300);
-    });
-
-    // Event listener for filter select
-    filterSelect.addEventListener('change', function() {
-        updateSearchResults(searchInput.value, this.value);
-    });
-
-    // Initial search results update
-    updateSearchResults(searchInput.value, filterSelect.value);
+  toggleSwitch.addEventListener('change', function() {
+    searchByLocation = this.checked;
+    searchInput.placeholder = searchByLocation ? 'Search by location...' : 'Search events...';
+    filterEvents();
+  });
 });
 </script>
 

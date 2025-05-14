@@ -1,19 +1,24 @@
 <%- include('../partials/header') %>
 
-<div class="container text-center">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    <h1 class="display-4 mb-4">Thank You!</h1>
-                    <p class="lead">Your message has been received. We'll get back to you soon.</p>
-                    <hr class="my-4">
-                    <p>In the meantime, why not check out our upcoming events?</p>
-                    <a href="/events" class="btn btn-primary btn-lg">View Events</a>
-                </div>
-            </div>
+<div class="game-container">
+  <div class="game-header">
+    <span class="game-title">MESSAGE SENT!</span>
+  </div>
+  <div class="game-content">
+    <div class="thank-you">
+      <h1>LEVEL CLEARED!</h1>
+      <p class="success-message">Your message has been successfully transmitted!</p>
+      <% if (submission) { %>
+        <div class="user-details">
+          <p><strong>Name:</strong> <%= submission.name %></p>
+          <p><strong>Email:</strong> <%= submission.email %></p>
+          <p><strong>Message:</strong> <%= submission.message %></p>
         </div>
+      <% } %>
+      <p class="quote">"<%= quote %>"</p>
+      <a href="/" class="game-button">RETURN TO HOME</a>
     </div>
+  </div>
 </div>
 
 <%- include('../partials/footer') %>
