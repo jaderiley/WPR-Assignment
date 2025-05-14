@@ -43,14 +43,14 @@ PixelVerse is a retro-themed community portal built with Node.js, Express, and E
 
 ---
 
-## 🖼 Screenshots (optional)
-_Add screenshots of your app here. Example:_
+## 🖼 Screenshots
+
 
 ![Home Page Screenshot](./screenshots/home.png)
 
 ---
 
-## Reflection (optional)
+## Reflection
 Throughout the development of PixelVerse, our team gained valuable experience in collaborative web development using Node.js and Express. We learned how to structure a scalable Express application, manage dynamic data, and create a cohesive retro-themed user interface with EJS and CSS3. 
 
 Some challenges we faced included synchronizing work across different roles  and handling in-memory data for contact submissions. Debugging route issues and maintaining a consistent retro aesthetic were also key learning points.
