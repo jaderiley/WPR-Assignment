@@ -67,6 +67,29 @@ router.get('/event/:title', (req, res) => {
   }
 });
 
+// Registration page
+router.get('/register/:title', (req, res) => {
+  const event = events.find(e => e.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-') === req.params.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-'));
+  if (event) {
+    res.render('pages/register', { event });
+  } else {
+    res.status(404).send('Event not found');
+  }
+});
+
+// Handle registration submission
+router.post('/register/:title', (req, res) => {
+  const event = events.find(e => e.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-') === req.params.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-'));
+  if (event) {
+    const { name, email } = req.body;
+    registrations.push({ eventTitle: event.title, name, email, timestamp: new Date() });
+    res.redirect(`/thankyou?event=${encodeURIComponent(event.title)}`);
+  } else {
+    res.status(404).send('Event not found');
+  }
+});
+
+
 // Contact page
 router.get('/contact', (req, res) => {
   res.render('pages/contact');
