@@ -1,0 +1,14 @@
+router.get('/forum', (req, res) => {
+  const forumPosts = [
+    { username: "Jason", message: "Best Pac-Man tip?", timestamp: "2025-05-14" },
+    // Add more posts
+  ];
+  res.render('pages/forum', { forumPosts });
+});
+
+router.post('/forum', (req, res) => {
+  const { username, message } = req.body;
+  const forumPosts = [];
+  forumPosts.push({ username, message, timestamp: new Date() });
+  res.redirect('/forum');
+});
