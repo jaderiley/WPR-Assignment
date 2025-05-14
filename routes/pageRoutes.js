@@ -15,7 +15,7 @@ const events = [
 
 const team = [
   { name: 'Jason Maracha Bond', role: 'Team Lead', game: 'Donkey Kong', icon: '/images/icons/Pacman.png' },
-  { name: 'Erik Knoetze', role: 'Frontend Dev', game: 'Pac-Man', icon: '/images/icons/Ghost1.png' },
+  { name: 'Erick Knoetze', role: 'Frontend Dev', game: 'Pac-Man', icon: '/images/icons/Ghost1.png' },
   { name: 'Jade Riley', role: 'Backend Dev', game: 'Galaga', icon: '/images/icons/Ghost2.png' },
   { name: 'Shiva Ganesh', role: 'Data Manager', game: 'Snake', icon: '/images/icons/Ghost3.png' }
 ];
