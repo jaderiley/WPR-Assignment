@@ -1,0 +1,90 @@
+<%- include('../partials/header') %>
+
+<div class="game-container">
+  <div class="game-header">
+    <span class="game-title">LEVEL CLEARED!</span>
+  </div>
+  <div class="game-content">
+    <div class="thank-you">
+      <h1>REGISTRATION COMPLETE!</h1>
+      <p class="success-message">You have successfully registered for <%= event.name %>!</p>
+      
+      <div class="user-details">
+        <h3>Event Details:</h3>
+        <p><strong>Event:</strong> <%= event.name %></p>
+        <p><strong>Date:</strong> <%= event.date %></p>
+        <p><strong>Location:</strong> <%= event.location %></p>
+      </div>
+
+      <div class="countdown-section">
+        <h3>Event Starts In:</h3>
+        <div id="eventCountdown" class="countdown-timer"></div>
+      </div>
+
+      <% if (registrations && registrations.length > 0) { %>
+        <div class="registrations-list">
+          <div class="latest-registration">
+            <h3>Your Registration:</h3>
+            <div class="player-card highlight">
+              <div class="player-icon">🎮</div>
+              <div class="player-info">
+                <p class="player-name"><%= latestRegistration.name %></p>
+              </div>
+            </div>
+          </div>
+
+          <% if (registrations.length > 1) { %>
+            <div class="other-players">
+              <h3>Other Players Registered:</h3>
+              <div class="players-grid">
+                <% registrations.slice(0, -1).forEach(registration => { %>
+                  <div class="player-card">
+                    <div class="player-icon">👾</div>
+                    <div class="player-info">
+                      <p class="player-name"><%= registration.name %></p>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      <% } %>
+
+      <p class="quote">"<%= quote %>"</p>
+      
+      <div class="button-group">
+        <a href="/events" class="game-button">BACK TO EVENTS</a>
+        <a href="/" class="game-button">RETURN TO HOME</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Set up countdown
+  const eventDateTime = new Date('<%= event.date %>').getTime();
+  
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = eventDateTime - now;
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    document.getElementById('eventCountdown').innerHTML = 
+      `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      
+    if (distance < 0) {
+      clearInterval(countdownInterval);
+      document.getElementById('eventCountdown').innerHTML = "EVENT STARTED!";
+    }
+  }
+
+  updateCountdown();
+  const countdownInterval = setInterval(updateCountdown, 1000);
+</script>
+
+<%- include('../partials/footer') %> 

@@ -24,7 +24,26 @@
             <input type="email" name="email" required style="background: rgba(0,0,0,0.5); color: white; border: 2px solid var(--neon-cyan);">
           </div>
           <button type="submit" class="game-button">Submit Registration</button>
+          <a href="/events" class="game-button" style="margin-top: 10px; display: inline-block; text-decoration: none;">← Back to Events</a>
         </form>
+
+        <div class="players-list">
+          <h3>Registered Players</h3>
+          <% if (registeredPlayers && registeredPlayers.length > 0) { %>
+            <div class="players-grid">
+              <% registeredPlayers.forEach(player => { %>
+                <div class="player-card">
+                  <div class="player-icon">👤</div>
+                  <div class="player-info">
+                    <p class="player-name"><%= player.name %></p>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <p class="no-players">Be the first to register for this event!</p>
+          <% } %>
+        </div>
       </div>
     </div>
   </div>

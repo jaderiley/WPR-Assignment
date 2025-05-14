@@ -240,6 +240,95 @@ nav a:hover {
   text-shadow: 0 0 10px var(--neon-magenta);
 }
 
+/* Registration Complete Page */
+.game-container {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.thank-you {
+  text-align: center;
+  padding: 2rem;
+}
+
+.success-message {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+.user-details {
+  margin: 2rem 0;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.countdown-section {
+  margin: 2rem 0;
+}
+
+.countdown-timer {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--neon-cyan);
+}
+
+.registrations-list {
+  margin: 2rem 0;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.player-card {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player-icon {
+  font-size: 2rem;
+}
+
+.player-info {
+  text-align: left;
+}
+
+.player-name {
+  font-weight: bold;
+  margin: 0;
+}
+
+.registration-time {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.latest-registration {
+  margin-bottom: 2rem;
+}
+
+.player-card.highlight {
+  background: rgba(76, 175, 80, 0.1);
+  border: 2px solid var(--neon-cyan);
+}
+
+.other-players {
+  margin-top: 2rem;
+}
+
+.other-players h3 {
+  margin-bottom: 1rem;
+}
+
 .back-button {
   display: inline-block;
   padding: 1rem 2rem;
@@ -559,3 +648,141 @@ h1 {
 .game-title {
   text-align: center;
 }
+.click-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: var(--neon-cyan);
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.event-card:hover .click-indicator {
+  transform: translateX(-5px);
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.players-list {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--neon-cyan);
+  border-radius: 8px;
+}
+
+.players-list h3 {
+  color: var(--neon-cyan);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.player-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-icon {
+  font-size: 1.5em;
+}
+
+.player-name {
+  margin: 0;
+  color: white;
+  font-size: 0.9em;
+}
+
+.no-players {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.button-group .game-button {
+  margin: 0;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background: #181818;
+  margin: 5% auto;
+  padding: 30px 40px;
+  border: 2px solid var(--neon-cyan);
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  color: white;
+  position: relative;
+  box-shadow: 0 0 30px var(--neon-cyan);
+}
+
+.close-modal {
+  color: var(--neon-cyan);
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-modal:hover {
+  color: var(--neon-pink);
+}
+
+.large-modal {
+  max-width: 900px;
+  padding: 60px 90px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--neon-cyan);
+  color: white;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  transition: all 0.3s;
+}
+
+.modal-content input:focus {
+  outline: none;
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 10px var(--neon-magenta);
+} 
