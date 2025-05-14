@@ -44,7 +44,7 @@ PixelVerse is a retro-themed community portal built with Node.js, Express, and E
 ---
 
 ## 🖼 Screenshots (optional)
-_Add screenshots of your app here. Example:_
+
 
 ![Home Page Screenshot](./screenshots/home.png)
 
