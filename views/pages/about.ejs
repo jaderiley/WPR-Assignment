@@ -1,22 +1,27 @@
 <%- include('../partials/header') %>
 
-<div class="container">
-    <h1 class="mb-4">About Our Team</h1>
-    <p class="lead mb-5">We are a dedicated team working together to build a vibrant community platform.</p>
+<h1>About Our Team</h1>
 
-    <div class="row">
-        <% teamInfo.forEach(member => { %>
-            <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= member.name %></h5>
-                        <h6 class="card-subtitle mb-2 text-muted"><%= member.role %></h6>
-                        <p class="card-text"><%= member.bio %></p>
-                    </div>
-                </div>
-            </div>
-        <% }); %>
+<div class="game-container team-container">
+  <div class="game-header">
+    <span class="game-title">TEAM MEMBERS</span>
+  </div>
+  <div class="game-content">
+    <div class="team-grid">
+      <% team.forEach(member => { %>
+        <div class="team-member">
+          <div class="member-icon">
+            <img src="<%= member.icon %>" alt="<%= member.name %>'s icon" class="team-icon">
+          </div>
+          <div class="member-info">
+            <h3 class="member-name"><%= member.name %></h3>
+            <p class="member-role"><%= member.role %></p>
+            <p class="member-game">Favorite Game: <%= member.game %></p>
+          </div>
+        </div>
+      <% }); %>
     </div>
+  </div>
 </div>
 
 <%- include('../partials/footer') %>

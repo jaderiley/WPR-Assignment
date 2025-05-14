@@ -3,146 +3,139 @@
 const express = require('express');
 const router = express.Router();
 
-// In-memory data storage
-const teamInfo = [
-    {
-        name: "John Doe",
-        role: "Team Lead",
-        bio: "Experienced developer with a passion for community building"
-    },
-    {
-        name: "Jane Smith",
-        role: "Backend Developer",
-        bio: "Specializes in Node.js and database management"
-    },
-    {
-        name: "Mike Johnson",
-        role: "Frontend Developer",
-        bio: "Expert in modern web technologies and UI/UX"
-    },
-    {
-        name: "Sarah Williams",
-        role: "Data Manager",
-        bio: "Data enthusiast with strong analytical skills"
-    }
-];
-
+// Data
 const events = [
-    {
-        title: "Community Meetup",
-        date: "2024-05-15",
-        location: "Main Hall",
-        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-        description: "Join us for our monthly community gathering"
-    },
-    {
-        title: "Community Meetup",
-        date: "2025-05-15",
-        location: "Main Hall",
-        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-        description: "Join us for our monthly community gathering"
-    },
-    {
-        title: "Tech Workshop",
-        date: "2025-05-20",
-        location: "Conference Room",
-        image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
-        description: "Learn about the latest web technologies"
-    },
-    {
-        title: "Networking Event",
-        date: "2025-05-25",
-        location: "Community Center",
-        image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
-        description: "Connect with fellow community members"
-    }
+  { title: "Cartridge Collector's Fest", date: '2025-05-25', location: 'Sports Field', image: '/images/raw.png', description: 'Celebrate cartridge collecting!' },
+  { title: 'LAN Legends', date: '2025-06-05', location: 'Smart City', image: '/images/LanEvent.png', description: 'LAN party extravaganza!' },
+  { title: 'Cosplay & Cartridges', date: '2025-06-17', location: 'Belgium Campus, Pretoria', image: '/images/Cos&Cart.png', description: 'Cosplay and retro gaming fun!' },
+  { title: 'Just Dance Retro Remix', date: '2025-07-02', location: 'Smart City', image: '/images/RetroRemix.png', description: 'Dance to retro beats!' },
+  { title: "Pac-man's Prejudice", date: '2025-07-15', location: 'Online', image: '/images/HighScoreEvent.png', description: 'Join us for a high-score challenge!' },
+  { title: 'Throwback Thursday', date: '2025-08-01', location: 'All Belgium Campuses', image: '/images/Arcade.png', description: 'Relive arcade classics!' }
 ];
 
-// Store contact form submissions
+const team = [
+  { name: 'Jason Maracha Bond', role: 'Team Lead', game: 'Donkey Kong', icon: '/images/icons/Pacman.png' },
+  { name: 'Erick Knoetze', role: 'Frontend Dev', game: 'Pac-Man', icon: '/images/icons/Ghost1.png' },
+  { name: 'Jade Riley', role: 'Backend Dev', game: 'Galaga', icon: '/images/icons/Ghost2.png' },
+  { name: 'Shiva Ganesh', role: 'Data Manager', game: 'Snake', icon: '/images/icons/Ghost3.png' }
+];
+
+const gameQuotes = [
+  "It's dangerous to go alone! Take this.",
+  "All your base are belong to us.",
+  "Do a barrel roll!",
+  "The cake is a lie.",
+  "Would you kindly?",
+  "War. War never changes."
+];
+
+// Store contact submissions in memory
 const contactSubmissions = [];
+const registrations = {};
 
-// Routes
+// Home page
 router.get('/', (req, res) => {
-    // Get today's date at midnight
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    // Filter and sort upcoming events
-    const upcoming = events
-        .filter(event => {
-            const eventDate = new Date(event.date);
-            eventDate.setHours(0,0,0,0);
-            return eventDate >= today;
-        })
-        .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .slice(0, 3);
-    res.render('pages/home', { 
-        title: 'Home',
-        upcomingEvents: upcoming
-    });
+  const now = new Date();
+  const upcomingEvents = events
+    .filter(event => new Date(event.date) > now)
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 3);
+
+  res.render('pages/home', {
+    upcomingEvents,
+    nextEvent: upcomingEvents[0],
+    registrations
+  });
 });
 
+
+// About page
 router.get('/about', (req, res) => {
-    res.render('pages/about', { 
-        title: 'About Us',
-        teamInfo: teamInfo
-    });
+  res.render('pages/about', { team });
 });
 
+// Events page
 router.get('/events', (req, res) => {
-    const { search, filter } = req.query;
-    let filteredEvents = [...events];
-
-    // Apply search filter if search term is provided
-    if (search) {
-        const searchTerm = search.toLowerCase();
-        filteredEvents = filteredEvents.filter(event => 
-            event.title.toLowerCase().includes(searchTerm) ||
-            event.description.toLowerCase().includes(searchTerm) ||
-            event.location.toLowerCase().includes(searchTerm)
-        );
-    }
-
-    // Apply date filter if specified
-    if (filter) {
-        const today = new Date();
-        filteredEvents = filteredEvents.filter(event => {
-            const eventDate = new Date(event.date);
-            if (filter === 'upcoming') {
-                return eventDate >= today;
-            } else if (filter === 'past') {
-                return eventDate < today;
-            }
-            return true;
-        });
-    }
-
-    // Sort events by date
-    filteredEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    res.render('pages/events', { 
-        title: 'Events',
-        events: filteredEvents,
-        search: search || '',
-        filter: filter || ''
-    });
+  res.render('pages/events', { events });
 });
 
+
+// Registration page
+router.get('/register/:title', (req, res) => {
+  const event = events.find(e => e.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-') === req.params.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-'));
+  if (event) {
+    res.render('pages/register', { event });
+  } else {
+    res.status(404).send('Event not found');
+  }
+});
+
+// Handle registration submission
+router.post('/register/:title', express.json(), (req, res) => {
+  const event = events.find(e =>
+    e.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-') ===
+    req.params.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')
+  );
+
+  if (!event) return res.status(404).send('Event not found');
+  console.log('BODY:', req.body);
+  const { registration } = req.body;
+  const { name, email } = registration;
+
+  if (!registrations[event.title]) {
+    registrations[event.title] = [];
+  }
+
+  registrations[event.title].push({
+    name,
+    email,
+    timestamp: new Date()
+  });
+
+  return res.status(200).json({ success: true });
+});
+
+router.get('/registration-complete', (req, res) => {
+  const { eventName, eventDate, eventLocation } = req.query;
+  const quote = gameQuotes[Math.floor(Math.random() * gameQuotes.length)];
+  
+  // Get registrations only for this specific event
+  const eventRegistrations = registrations[eventName] || [];
+  
+  // Get the most recent registration (the one that just happened)
+  const latestRegistration = eventRegistrations[eventRegistrations.length - 1];
+
+  res.render('pages/registration-complete', {
+    quote,
+    event: {
+      name: eventName,
+      date: eventDate,
+      location: eventLocation
+    },
+    registrations: eventRegistrations,
+    latestRegistration // Pass the latest registration separately
+  });
+});
+
+// Contact page
 router.get('/contact', (req, res) => {
-    res.render('pages/contact', { 
-        title: 'Contact Us'
-    });
+  res.render('pages/contact');
 });
 
-router.post('/contact', express.urlencoded({ extended: true }), (req, res) => {
-    const { name, email, message } = req.body;
-    contactSubmissions.push({ name, email, message, date: new Date() });
-    res.redirect('/thankyou');
+// Handle contact form submission
+router.post('/contact', (req, res) => {
+  const { name, email, message } = req.body;
+  contactSubmissions.push({ name, email, message, timestamp: new Date() });
+  res.redirect('/thankyou');
 });
 
+// Thank you page
 router.get('/thankyou', (req, res) => {
-    res.render('pages/thankyou', { 
-        title: 'Thank You'
-    });
+  const randomQuote = gameQuotes[
+    Math.floor(Math.random() * gameQuotes.length)
+  ];
+  const lastSubmission = contactSubmissions[contactSubmissions.length - 1];
+  res.render('pages/thankyou', { quote: randomQuote, submission: lastSubmission });
 });
 
 module.exports = router;

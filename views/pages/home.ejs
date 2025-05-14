@@ -1,42 +1,227 @@
 <%- include('../partials/header') %>
 
-<div class="jumbotron bg-light p-5 rounded">
-    <h1 class="display-4">Welcome to Our Community Portal</h1>
-    <p class="lead">Join us in building a stronger, more connected community.</p>
-    <hr class="my-4">
-    <p>Discover upcoming events, meet new people, and get involved in our community activities.</p>
+<div class="welcome-banner">
+  WELCOME TO PIXELVERSE!
 </div>
 
-<h2 class="mt-5 mb-4">Upcoming Events</h2>
-<div class="row">
-    <% let sortedEvents = upcomingEvents
-        .filter(event => new Date(event.date) >= new Date())
-        .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .slice(0, 3); %>
-    <% if (sortedEvents.length > 0) { %>
-        <% sortedEvents.forEach(event => { %>
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="<%= event.image %>" class="card-img-top" alt="<%= event.title %>">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= event.title %></h5>
-                        <p class="card-text">
-                            <strong>Date:</strong> <%= new Date(event.date).toLocaleDateString() %><br>
-                            <strong>Location:</strong> <%= event.location %>
-                        </p>
-                        <p class="card-text"><%= event.description %></p>
-                    </div>
-                </div>
-            </div>
-        <% }); %>
-    <% } else { %>
-        <div class="col-12">
-            <div class="alert alert-warning">No upcoming events at the moment.</div>
+<% if (nextEvent) { %>
+  <div class="game-container countdown-container">
+    <div class="game-header">
+      <span class="game-title">NEXT EVENT</span>
+    </div>
+    <div class="game-content">
+      <div class="countdown">
+        <h3 class="event-title"><%= nextEvent.title %></h3>
+        <div class="countdown-timer">
+          <span id="timer"></span>
         </div>
-    <% } %>
+        <div class="event-details">
+          <p>Date: <%= new Date(nextEvent.date).toLocaleDateString() %></p>
+          <p>Location: <%= nextEvent.location %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } else { %>
+  <div class="game-container countdown-container">
+    <div class="game-header">
+      <span class="game-title">NEXT EVENT</span>
+    </div>
+    <div class="game-content">
+      <div class="countdown">
+        <p>No upcoming events scheduled</p>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Updated Events Section -->
+<div class="game-container events-container">
+  <div class="game-header">
+    <span class="game-title">UPCOMING EVENTS</span>
+  </div>
+  <div class="game-content">
+    <div class="event-grid">
+      <% upcomingEvents.forEach(event => { %>
+        <div class="event-card open-register-modal"
+             data-event-title="<%= event.title %>"
+             data-event-slug="<%= event.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-') %>"
+             style="background-image: url('<%= event.image %>');
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    position: relative; cursor: pointer;">
+          <div class="click-indicator">Register Now</div>
+          <div class="content">
+            <h3 class="event-title"><%= event.title %></h3>
+            <p class="event-date"><%= event.date %></p>
+            <p class="event-location"><%= event.location %></p>
+            <p class="event-description"><%= event.description %></p>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>                
 </div>
-<div class="text-center mt-4">
-    <a class="btn btn-primary btn-lg" href="/events" role="button">View All Events</a>
+
+<% if (nextEvent) { %>
+  <div id="countdown-data" data-event-date="<%= nextEvent.date %>" style="display:none;"></div>
+<% } %>
+
+<!-- Registration Modal -->
+<div id="registerModal" class="modal">
+  <div class="modal-content large-modal">
+    <span class="close-modal">&times;</span>
+    <div id="modalEventCard" class="event-card" style="margin-bottom: 20px; height: 200px; background-size: cover; background-position: center; position: relative;">
+      <div class="content" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); padding: 15px; color: white;">
+        <h3 id="modalEventCardTitle" class="event-title"></h3>
+        <div id="modalEventCountdown" class="countdown-timer"></div>
+        <p id="modalEventDate" class="event-date"></p>
+        <p id="modalEventLocation" class="event-location"></p>
+      </div>
+    </div>
+    <h2 id="modalEventTitle">Register for Event</h2>
+    <form id="modalRegisterForm" method="POST" onsubmit="handleRegistration(event)">
+      <div class="form-group">
+        <label for="modalName">PLAYER NAME:</label>
+        <input type="text" id="modalName" name="name" placeholder="Enter your name" required />
+      </div>
+      <div class="form-group">
+        <label for="modalEmail">EMAIL ADDRESS:</label>
+        <input type="email" id="modalEmail" name="email" placeholder="Enter your email" required />
+      </div>
+      <button type="submit" class="game-button">REGISTER NOW</button>
+    </form>
+  </div>
 </div>
+
+<script>
+  const countdownData = document.getElementById('countdown-data');
+  if (countdownData) {
+    const eventDate = new Date(countdownData.dataset.eventDate).getTime();
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById('timer').innerHTML = 
+        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      if (distance < 0) {
+        clearInterval(countdownInterval);
+        document.getElementById('timer').innerHTML = "EVENT STARTED!";
+      }
+    }
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+  }
+
+  // Modal logic
+  const modal = document.getElementById('registerModal');
+  const closeModal = document.querySelector('.close-modal');
+  const modalEventTitle = document.getElementById('modalEventTitle');
+  const modalRegisterForm = document.getElementById('modalRegisterForm');
+  let currentEventSlug = '';
+
+  document.querySelectorAll('.open-register-modal').forEach(card => {
+    card.addEventListener('click', function(e) {
+      // Prevent nested button click if any
+      if (e.target.closest('button')) return;
+      const eventTitle = this.getAttribute('data-event-title');
+      currentEventSlug = this.getAttribute('data-event-slug');
+      modalEventTitle.textContent = `Register for ${eventTitle}`;
+      modalRegisterForm.action = `/register/${currentEventSlug}`;
+      
+      // Update modal event card
+      const modalEventCard = document.getElementById('modalEventCard');
+      const modalEventCardTitle = document.getElementById('modalEventCardTitle');
+      const modalEventCountdown = document.getElementById('modalEventCountdown');
+      const modalEventDate = document.getElementById('modalEventDate');
+      const modalEventLocation = document.getElementById('modalEventLocation');
+      
+      modalEventCard.style.backgroundImage = `url('${this.style.backgroundImage.slice(4, -1).replace(/"/g, "")}')`;
+      modalEventCardTitle.textContent = eventTitle;
+      modalEventDate.textContent = this.querySelector('.event-date').textContent;
+      modalEventLocation.textContent = this.querySelector('.event-location').textContent;
+      
+      // Set up countdown for this event
+      const eventDate = new Date(this.querySelector('.event-date').textContent).getTime();
+      function updateModalCountdown() {
+        const now = new Date().getTime();
+        const distance = eventDate - now;
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        modalEventCountdown.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        if (distance < 0) {
+          clearInterval(modalCountdownInterval);
+          modalEventCountdown.innerHTML = "EVENT STARTED!";
+        }
+      }
+      updateModalCountdown();
+      const modalCountdownInterval = setInterval(updateModalCountdown, 1000);
+      
+      modal.style.display = 'block';
+    });
+  });
+
+  closeModal.onclick = function() {
+    modal.style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  }
+
+  // Handle form submission
+  async function handleRegistration(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    const eventTitle = document.getElementById('modalEventCardTitle').textContent;
+    const eventDate = document.getElementById('modalEventDate').textContent;
+    const eventLocation = document.getElementById('modalEventLocation').textContent;
+
+    try {
+      // Create registration object
+      const registration = {
+        name: formData.get('name'),
+        email: formData.get('email')
+      };
+
+      // Send registration to server
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          eventSlug: currentEventSlug,
+          registration: registration
+        })
+      });
+
+      if (response.ok) {
+        // Redirect to registration complete page with event details
+        const params = new URLSearchParams({
+          eventName: eventTitle,
+          eventDate: eventDate,
+          eventLocation: eventLocation
+        });
+        window.location.href = `/registration-complete?${params.toString()}`;
+      } else {
+        alert('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
+    }
+  }
+</script>
 
 <%- include('../partials/footer') %>
